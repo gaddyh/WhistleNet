@@ -1,4 +1,4 @@
 # WhistleNet
 
 Colab file at:
-https://colab.research.google.com/github/gaddyh/WhistleNet/blob/main/WhistleNet.ipynb#scrollTo=k0sDfB8NxQPz
+https://colab.research.google.com/drive/15labAbfZ-2MlUlFWqsgF-LrbjnjOQwv9#scrollTo=JNk_oSCO2Gk_
