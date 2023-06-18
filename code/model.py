@@ -57,9 +57,9 @@ def train_color_encoder(X1, X2, y) :
 
 
     # Fit model
-    siamese_model.fit([X1, X2], y, epochs=100, batch_size=5, shuffle=True, verbose=True)
+    # siamese_model.fit([X1, X2], y, epochs=100, batch_size=5, shuffle=True, verbose=True)
 
-    model.save(os.getcwd()+"/color_encoder.h5")
-    siamese_model.save(os.getcwd()+"/color_siamese_model.h5")
+    # model.save(os.getcwd()+"/color_encoder.h5")
+    # siamese_model.save(os.getcwd()+"/color_siamese_model.h5")
 
     return model, siamese_model
