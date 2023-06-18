@@ -7,16 +7,8 @@ import os, sys
 import tensorflow as tf
 from keras.utils.vis_utils import plot_model
 
-
-
-
-
-
-# Train autoencoder and save encoder model and encodings
 def create_siamese_model() :
-
-    # Color Encoder
-    input_layer = Input((28, 28, 3))
+    input_layer = Input((343, 129, 1))
     layer1 = Conv2D(16, (3, 3), activation='relu', padding='same')(input_layer)
     layer2 = MaxPooling2D((2, 2), padding='same')(layer1)
     layer3 = Conv2D(8, (3, 3), activation='relu', padding='same')(layer2)
@@ -25,19 +17,15 @@ def create_siamese_model() :
     embeddings = Dense(16, activation=None)(layer5)
     norm_embeddings = tf.nn.l2_normalize(embeddings, axis=-1)
 
-
-    # Create model
     model = Model(inputs=input_layer, outputs=norm_embeddings)
 
-
     # Create siamese model
-    input1 = Input((28,28,3))
-    input2 = Input((28,28,3))
+    input1 = Input((343, 129, 1))
+    input2 = Input((343, 129, 1))
 
     # Create left and right twin models
     left_model = model(input1)
     right_model = model(input2)
-
 
     # Dot product layer
     dot_product = dot([left_model, right_model], axes=1, normalize=False)
