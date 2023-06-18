@@ -73,7 +73,7 @@ def audio2image(full_path):
     return ready[full_path]
 
 
-def getall(anchorsdir):
+def getall1(anchorsdir):
   anchorfns = []
   for path in os.listdir(anchorsdir):
     full_path = os.path.join(anchorsdir, path)
@@ -84,6 +84,15 @@ def getall(anchorsdir):
       anchorfns.append(anchorsdir + os.path.splitext(path)[0] + '_roll.wav')
       anchorfns.append(anchorsdir + os.path.splitext(path)[0] + '_strech08.wav')
       anchorfns.append(anchorsdir + os.path.splitext(path)[0] + '_strech12.wav')
+  return anchorfns
+
+def getall(anchorsdir):
+  anchorfns = []
+  for path in os.listdir(anchorsdir):
+    full_path = os.path.join(anchorsdir, path)
+    ext = os.path.splitext(full_path)[1]
+    if ext != ".png" and os.path.isfile(full_path):
+      anchorfns.append(full_path)
   return anchorfns
 
 
