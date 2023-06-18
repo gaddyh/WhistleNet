@@ -1,6 +1,7 @@
 sample_rate = 44100
 
-!pip install audio2numpy
+# must be in main/colab
+#!pip install audio2numpy
 
 import librosa
 import numpy as np
