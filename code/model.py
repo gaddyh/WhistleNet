@@ -13,7 +13,7 @@ from keras.utils.vis_utils import plot_model
 
 
 # Train autoencoder and save encoder model and encodings
-def create_siamese_model(X1, X2, y) :
+def create_siamese_model() :
 
     # Color Encoder
     input_layer = Input((28, 28, 3))
