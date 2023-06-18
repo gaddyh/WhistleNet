@@ -3,6 +3,11 @@ sample_rate = 44100
 import librosa
 import numpy as np
 
+def load(path, sample_rate):
+  x = tf.io.read_file(str(path))
+  waveform, _ = tf.audio.decode_wav(x, desired_channels=1, desired_samples=sample_rate,)
+  return waveform
+  
 def stretch(data, rate=1):
 	input_length = sample_rate
 	data = librosa.effects.time_stretch(data, rate=rate)
