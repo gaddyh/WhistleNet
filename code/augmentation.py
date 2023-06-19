@@ -5,19 +5,7 @@ sample_rate = 44100
 
 import librosa
 import numpy as np
-import tensorflow as tf
-from audio2numpy import open_audio
 
-def load(path):
-	signal, sampling_rate = open_audio(path)
-	signal = np.pad(signal, (0, max(0, sample_rate - len(signal))), "constant")
-	return signal
-	
-def load_tensor(path, sample_rate):
-  x = tf.io.read_file(str(path))
-  waveform, _ = tf.audio.decode_wav(x, desired_channels=1, desired_samples=sample_rate,)
-  return waveform
-  
 def stretch(data, rate=1):
 	input_length = sample_rate
 	data = librosa.effects.time_stretch(data, rate=rate)
@@ -61,7 +49,5 @@ def shift(data, sampling_rate, shift_max, shift_direction):
 	
 def pitch(data, sampling_rate, pitch_factor):
     return librosa.effects.pitch_shift(data, sampling_rate, pitch_factor)
-	
-def strech(data, speed_factor):
-    return librosa.effects.time_stretch(data, speed_factor)
+
 	

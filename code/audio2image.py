@@ -1,3 +1,5 @@
+import tensorflow as tf
+
 def get_spectrogram(waveform):
   # Convert the waveform to a spectrogram via a STFT.
   spectrogram = tf.signal.stft(
@@ -9,3 +11,4 @@ def get_spectrogram(waveform):
   # shape (`batch_size`, `height`, `width`, `channels`).
   spectrogram = spectrogram[..., tf.newaxis]
   return spectrogram
+  

@@ -36,11 +36,10 @@ def create_siamese_model() :
     print(siamese_model.summary())
 
     # Compile model    
-    siamese_model.compile(optimizer='adam', loss= 'mse')
+    siamese_model.compile(optimizer='adam', loss= 'mse', metrics=['accuracy'])
  
     # Plot flowchart fo model
     plot_model(siamese_model, to_file=os.getcwd()+'/siamese_model_mnist.png', show_shapes=1, show_layer_names=1)
-
 
     # Fit model
     # siamese_model.fit([X1, X2], y, epochs=100, batch_size=5, shuffle=True, verbose=True)
