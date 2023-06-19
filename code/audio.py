@@ -6,8 +6,27 @@ import numpy as np
 #!pip install audio2numpy
 
 from audio2numpy import open_audio
+import math
 
 def load_max_samples(path):
+  samples = []
+
+  signal, sampling_rate = open_audio(path)
+  if(sampling_rate == sample_rate):
+    if len(signal) < sample_rate :
+      signal = np.pad(signal, (0, max(0, sample_rate - len(signal))), "constant")
+      samples.append(signal)
+    else:
+      count = math.floor(len(signal)/sample_rate)
+      out = np.split(signal, count)
+      for i in range(count):
+        samples.append( out[i][:sample_rate])
+  else:
+    print('bad sample rate for ' , path, 'sample is: ', sampling_rate)
+  
+  return samples
+
+def load_max_samples1(path):
   samples = []
 
   signal, sampling_rate = open_audio(path)
