@@ -14,7 +14,7 @@ def create_siamese_model() :
     layer3 = Conv2D(8, (3, 3), activation='relu', padding='same')(layer2)
     layer4 = MaxPooling2D((2, 2), padding='same')(layer3)
     layer5 = Flatten()(layer4)
-    embeddings = Dense(16, activation=None)(layer5)
+    embeddings = Dense(3, activation=None)(layer5)
     norm_embeddings = tf.nn.l2_normalize(embeddings, axis=-1)
 
     model = Model(inputs=input_layer, outputs=norm_embeddings)

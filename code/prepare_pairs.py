@@ -1,10 +1,49 @@
 import os
-ANCOR_PATH = 'WhistleNet/media/anchor/'
-NEGATIVE_PATH = 'WhistleNet/media/negative/'
 import tensorflow_io as tfio
 import librosa
 import tensorflow as tf
 import matplotlib.pyplot as plt
+
+DEV_PATH = 'WhistleNet/media/dev/'
+VALIDATION_PATH = 'WhistleNet/media/validation/'
+TEST_PATH = 'WhistleNet/media/test/'
+
+def get_set(path):
+	anchors = get_samples(path + '/anchor')
+	negatives = get_samples(path + '/negative')
+	
+	anchors = augment_spec(anchors)
+	negatives = augment_spec(negatives)
+	
+	return anchors, negatives
+
+
+def get_samples(path):
+	samples=[]
+	files = getall(path)
+	for file in files:
+	  samples=samples+load_max_samples(file)
+	return samples
+
+def augment_spec(samples):
+	signals=[]
+	for sample in samples:
+	  signal = np.array(sample)
+	  signal = np.squeeze(signal)
+	  #print(signal.shape,4)
+	  signals.append(signal)
+	  signals.append(noise(signal, noise_factor = 0.005 ))
+	  signals.append(stretch(signal, 1.2))
+	  signals.append(stretch(np.array(signal), 0.78))
+	  signals.append(np.roll(signal, 300))
+
+	signals = list(map(get_spectrogram, signals))
+
+
+
+
+
+
 
 
 def loadpairs(anchorfns, negativefns):
