@@ -3,7 +3,7 @@ import tensorflow_io as tfio
 import librosa
 import tensorflow as tf
 import matplotlib.pyplot as plt
-import augmentation
+from WhistleNet.code.augmentation import *
 
 DEV_PATH = 'WhistleNet/media/dev/'
 VALIDATION_PATH = 'WhistleNet/media/validation/'
