@@ -2,8 +2,14 @@ import os
 import tensorflow_io as tfio
 import librosa
 import tensorflow as tf
+import numpy as np
+import itertools
+import random
+
 import matplotlib.pyplot as plt
 from WhistleNet.code.augmentation import *
+from WhistleNet.code.audio import *
+from WhistleNet.code.audio2image import *
 
 DEV_PATH = 'WhistleNet/media/dev/'
 VALIDATION_PATH = 'WhistleNet/media/validation/'
@@ -11,7 +17,7 @@ TEST_PATH = 'WhistleNet/media/test/'
 
 def get_set(path):
 	anchors = get_samples(path + 'anchor/')
-	negatives = get_samples(path + '/negative/')
+	negatives = get_samples(path + 'negative/')
 	
 	anchors = augment_spec(anchors)
 	negatives = augment_spec(negatives)
@@ -40,37 +46,7 @@ def augment_spec(samples):
 
 	signals = list(map(get_spectrogram, signals))
 
-
-
-
-
-
-
-
-def loadpairs(anchorfns, negativefns):
-  color_X1 = []
-  color_X2 = []
-  color_y = []
-
-  for fname in anchorfns :
-    print(fname[0])
-    im = audio2image(fname[0])
-    color_X1.append(im)
-    im = audio2image(fname[1])
-    color_X2.append(im)
-    color_y.append(1)
-
-  for fname in negativefns :
-    im = audio2image(fname[0])
-    color_X1.append(im)
-    im = audio2image(fname[1])
-    color_X2.append(im)
-    color_y.append(0)
-
-  return color_X1, color_X2, color_y
-
-ready={"a": 1, "b":2, "c":3} # dummy dic
-rate=44100
+	return signals
 
 def getall(anchorsdir):
   anchorfns = []
@@ -81,27 +57,45 @@ def getall(anchorsdir):
       anchorfns.append(full_path)
   return anchorfns
 
-
-def test2(path):
-  print('test2')
-  return path
-
-def mediafiles():
-  media=[]
-  for file in os.listdir(ANCOR_PATH):
-    media.append(ANCOR_PATH + file)
-
-  for file in os.listdir(NEGATIVE_PATH):
-    media.append(NEGATIVE_PATH + file)
-
-  print("\n".join(media))
-  return media
-
 def prnt(str):
   print("\n".join(str))
 
-def printmediafiles(media):
-  for file in media:  
-    audio = tfio.audio.AudioIOTensor(file)
-    print(file)
-    print(audio)
+  
+def create_ds_pairs(anchors1, negatives1):
+  #when anchors only on left val[:,0] is bad val[:,1]] is excelent
+  l = len(anchors1)
+  lh = math.floor(l/2)
+
+  negatives = list(itertools.product(anchors1[:lh], negatives1))
+  negatives = negatives + list(itertools.product(negatives1, anchors1[lh:]))
+  anchors = list(itertools.combinations(anchors1,2))
+
+  X = anchors + negatives
+  labels = np.ones(len(anchors), dtype=int).tolist() + np.zeros((len(negatives),), dtype=int).tolist()
+
+  print(len(labels))
+
+  X = np.array(X)
+  labels = np.array(labels)
+
+  p = [x for x in range(len(labels))]
+  random.shuffle(p)
+
+  X = X[p]
+  labels = labels[p]
+
+  return X, labels
+
+
+
+model, siamese_model = create_siamese_model()
+
+#print(model.summary())
+
+history = siamese_model.fit([X[:,0], X[:,1]], labels, epochs=30, batch_size=32,
+                            validation_data=([val[:,0], val[:,1]], val_labels),
+                            shuffle=False, verbose=True)
+
+#len(anchors), len(negatives),len(X),
+print('--------------')
+#X[:,0].shape,X[:,1].shape, labels.shape

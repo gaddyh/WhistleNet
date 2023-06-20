@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 import os, sys
 import tensorflow as tf
 from keras.utils.vis_utils import plot_model
+from tensorflow.keras import regularizers
 
 def create_siamese_model() :
     input_layer = Input((343, 129, 1))
@@ -15,6 +16,8 @@ def create_siamese_model() :
     layer4 = MaxPooling2D((2, 2), padding='same')(layer3)
     layer5 = Flatten()(layer4)
     embeddings = Dense(3, activation=None)(layer5)
+    #embeddings = Dense(3, activation=tf.keras.activations.exponential, kernel_regularizer=regularizers.l2(0.1))(layer5)
+
     norm_embeddings = tf.nn.l2_normalize(embeddings, axis=-1)
 
     model = Model(inputs=input_layer, outputs=norm_embeddings)

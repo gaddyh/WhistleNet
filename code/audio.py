@@ -28,14 +28,14 @@ def load_max_samples(path):
       signal = np.pad(signal, (0, max(0, sample_rate - len(signal))), "constant")
       samples.append(signal)
     else:
-		count = math.floor(len(signal)/sample_rate)
-		for i in range(count):
-			if i == 0:
-				samples.append( signal[:sample_rate])
-			else:
-				start = sample_rate * i
-				end = sample_rate * (i+1)
-				samples.append( signal[start:end])
+      count = math.floor(len(signal)/sample_rate)
+      for i in range(count):
+        if i == 0:
+          samples.append( signal[:sample_rate])
+        else:
+          start = sample_rate * i
+          end = sample_rate * (i+1)
+          samples.append( signal[start:end])
   else:
     print('bad sample rate for ' , path, 'sample is: ', sampling_rate)
   
