@@ -121,14 +121,7 @@ def create_anchors_ds_pairs(anchors1, anchors2, anchors3):
   l2 = len(anchors2)
   lh2 = math.floor(l2/2)
   
-  negatives = list(itertools.product(anchors1[:lh], anchors2)) + 
-              list(itertools.product(anchors2, anchors1[lh:])) +
-              
-              list(itertools.product(anchors1[:lh], anchors3)) + 
-              list(itertools.product(anchors3, anchors1[lh:])) +
-              
-              list(itertools.product(anchors2[:lh2], anchors3)) + 
-              list(itertools.product(anchors3, anchors2[lh2:]))
+  negatives = list(itertools.product(anchors1[:lh], anchors2)) + list(itertools.product(anchors2, anchors1[lh:])) + list(itertools.product(anchors1[:lh], anchors3)) + list(itertools.product(anchors3, anchors1[lh:])) + list(itertools.product(anchors2[:lh2], anchors3)) + list(itertools.product(anchors3, anchors2[lh2:]))
               
   
   anchors = list(itertools.combinations(anchors1,2)) + list(itertools.combinations(anchors2,2)) + list(itertools.combinations(anchors3,2))
