@@ -1,4 +1,4 @@
-sample_rate = 44100
+sample_rate = 48000
 
 import numpy as np
 import tensorflow as tf

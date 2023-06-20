@@ -1,4 +1,4 @@
-sample_rate = 44100
+sample_rate = 48000
 
 # must be in main/colab
 #!pip install audio2numpy

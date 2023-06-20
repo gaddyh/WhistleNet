@@ -112,3 +112,39 @@ def create_anchors_ds_pairs(anchors1, anchors2):
   labels = labels[p]
 
   return X, labels
+  
+def create_anchors_ds_pairs(anchors1, anchors2, anchors3):
+  #when anchors only on left val[:,0] is bad val[:,1]] is excelent
+  l = len(anchors1)
+  lh = math.floor(l/2)
+
+  l2 = len(anchors2)
+  lh2 = math.floor(l2/2)
+  
+  negatives = list(itertools.product(anchors1[:lh], anchors2)) + 
+              list(itertools.product(anchors2, anchors1[lh:])) +
+              
+              list(itertools.product(anchors1[:lh], anchors3)) + 
+              list(itertools.product(anchors3, anchors1[lh:])) +
+              
+              list(itertools.product(anchors2[:lh2], anchors3)) + 
+              list(itertools.product(anchors3, anchors2[lh2:]))
+              
+  
+  anchors = list(itertools.combinations(anchors1,2)) + list(itertools.combinations(anchors2,2)) + list(itertools.combinations(anchors3,2))
+
+  X = anchors + negatives
+  labels = np.ones(len(anchors), dtype=int).tolist() + np.zeros((len(negatives),), dtype=int).tolist()
+
+  print(len(labels))
+
+  X = np.array(X)
+  labels = np.array(labels)
+
+  p = [x for x in range(len(labels))]
+  random.shuffle(p)
+
+  X = X[p]
+  labels = labels[p]
+
+  return X, labels
