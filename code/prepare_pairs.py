@@ -85,17 +85,3 @@ def create_ds_pairs(anchors1, negatives1):
   labels = labels[p]
 
   return X, labels
-
-
-
-model, siamese_model = create_siamese_model()
-
-#print(model.summary())
-
-history = siamese_model.fit([X[:,0], X[:,1]], labels, epochs=30, batch_size=32,
-                            validation_data=([val[:,0], val[:,1]], val_labels),
-                            shuffle=False, verbose=True)
-
-#len(anchors), len(negatives),len(X),
-print('--------------')
-#X[:,0].shape,X[:,1].shape, labels.shape
