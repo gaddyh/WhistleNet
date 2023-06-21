@@ -116,9 +116,7 @@ def create_anchors_ds_pairs(anchors1, anchors2):
 
   return X, labels
 
-  
-def create_anchors_ds_pairs(samplesbycategory):
-  #for i in range(samplesbycategory.shape[0]):
+ def create_anchors_list_pairs(anchors1, anchors2, anchors3):
   #when anchors only on left val[:,0] is bad val[:,1]] is excelent
   l = len(anchors1)
   lh = math.floor(l/2)
@@ -133,6 +131,9 @@ def create_anchors_ds_pairs(samplesbycategory):
 
   X = anchors + negatives
   labels = np.ones(len(anchors), dtype=int).tolist() + np.zeros((len(negatives),), dtype=int).tolist()
+  
+  return X, labels
+
 
 def create_anchors_ds_pairs(anchors1, anchors2, anchors3):
   #when anchors only on left val[:,0] is bad val[:,1]] is excelent
