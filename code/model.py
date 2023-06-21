@@ -1,12 +1,24 @@
 from keras.layers import Dropout, Input, Dense, InputLayer, Conv2D, MaxPooling2D, UpSampling2D, InputLayer, Concatenate, Flatten, Reshape, Lambda, Embedding, dot
 from keras.models import Model, load_model, Sequential
-import matplotlib.pyplot as plt
+from keras.losses import BinaryCrossentropy
+from keras.metrics import AUC, BinaryAccuracy
 import keras.backend as K
-from sklearn.model_selection import train_test_split
-import os, sys
-import tensorflow as tf
 from keras.utils.vis_utils import plot_model
+
+import tensorflow as tf
 from tensorflow.keras import regularizers
+
+METRICS = [
+      keras.metrics.TruePositives(name='tp'),
+      keras.metrics.FalsePositives(name='fp'),
+      keras.metrics.TrueNegatives(name='tn'),
+      keras.metrics.FalseNegatives(name='fn'), 
+      keras.metrics.BinaryAccuracy(name='accuracy'),
+      keras.metrics.Precision(name='precision'),
+      keras.metrics.Recall(name='recall'),
+      keras.metrics.AUC(name='auc', from_logits=False),
+      keras.metrics.AUC(name='prc', curve='PR'), # precision-recall curve
+]
 
 def create_siamese_model() :
     input_layer = Input((374, 129, 1))
@@ -34,7 +46,7 @@ def create_siamese_model() :
     right_model = model(input2)
 
     # Dot product layer
-    dot_product = dot([left_model, right_model], axes=1, normalize=True)
+    dot_product = dot([left_model, right_model], axes=1, normalize=False)
 
     siamese_model = Model(inputs=[input1, input2], outputs=dot_product)
 
@@ -42,7 +54,7 @@ def create_siamese_model() :
     print(siamese_model.summary())
 
     # Compile model    
-    siamese_model.compile(optimizer='adam', loss= tf.keras.losses.BinaryCrossentropy(from_logits=True), metrics=['accuracy', tf.keras.metrics.AUC(from_logits=True)])
+    siamese_model.compile(optimizer='adam', loss= BinaryCrossentropy(from_logits=False), metrics=METRICS)
  
     # Plot flowchart fo model
     plot_model(siamese_model, to_file=os.getcwd()+'/siamese_model_mnist.png', show_shapes=1, show_layer_names=1)
