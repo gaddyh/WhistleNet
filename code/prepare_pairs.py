@@ -37,7 +37,7 @@ def get_samples(path):
 	for file in os.listdir(path):
 	    #print(file)
 	    fp = os.path.join(path, file)
-        samples=samples+load_max_samples(fp)
+      samples=samples+load_max_samples(fp)
 	return samples
 
 def augment_spec(samples):
