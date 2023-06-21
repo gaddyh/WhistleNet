@@ -10,13 +10,15 @@ from tensorflow.keras import regularizers
 
 def create_siamese_model() :
     input_layer = Input((374, 129, 1))
+    Dropout(0.4)
     layer1 = Conv2D(16, (3, 3), activation='relu', padding='same')(input_layer)
     layer2 = MaxPooling2D((2, 2), padding='same')(layer1)
+    Dropout(0.8) 
     layer3 = Conv2D(8, (3, 3), activation='relu', padding='same')(layer2)
-    Dropout(0.8)
     layer4 = MaxPooling2D((2, 2), padding='same')(layer3)
+    Dropout(0.8)
     layer5 = Flatten()(layer4)
-    embeddings = Dense(3, activation=None)(layer5)
+    embeddings = Dense(16, activation=None)(layer5)
     #embeddings = Dense(3, activation=tf.keras.activations.exponential, kernel_regularizer=regularizers.l2(0.1))(layer5)
 
     norm_embeddings = tf.nn.l2_normalize(embeddings, axis=-1)
@@ -32,7 +34,7 @@ def create_siamese_model() :
     right_model = model(input2)
 
     # Dot product layer
-    dot_product = dot([left_model, right_model], axes=1, normalize=False)
+    dot_product = dot([left_model, right_model], axes=1, normalize=True)
 
     siamese_model = Model(inputs=[input1, input2], outputs=dot_product)
 
@@ -40,7 +42,7 @@ def create_siamese_model() :
     print(siamese_model.summary())
 
     # Compile model    
-    siamese_model.compile(optimizer='adam', loss= 'mse', metrics=['accuracy'])
+    siamese_model.compile(optimizer='adam', loss= 'mse', metrics=['accuracy', tf.keras.metrics.AUC(from_logits=True)])
  
     # Plot flowchart fo model
     plot_model(siamese_model, to_file=os.getcwd()+'/siamese_model_mnist.png', show_shapes=1, show_layer_names=1)
