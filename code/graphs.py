@@ -1,5 +1,11 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib as mpl
+from sklearn.metrics import confusion_matrix
+import numpy as np 
+
+mpl.rcParams['figure.figsize'] = (12, 10)
+colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
 def plot_metrics(history):
   metrics = ['loss', 'prc', 'precision', 'recall']

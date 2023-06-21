@@ -15,16 +15,23 @@ DEV_PATH = 'WhistleNet/media/dev/'
 VALIDATION_PATH = 'WhistleNet/media/validation/'
 TEST_PATH = 'WhistleNet/media/test/'
 
+MEDIA_PATH = 'WhistleNet/media/'
+
+def getall(media_dir):
+  samplesbycategory = []
+  i=0
+  for path in os.listdir(media_dir):
+    samples_dir = os.path.join(anchorsdir, path)
+    samplesbycategory[i] = get_set(samples_dir)
+    i=i+1
+  return samplesbycategory
+
+  
 def get_set(path):
-	anchors = get_samples(path + 'anchor/')
-	negatives = get_samples(path + 'negative/')
-	
-	anchors = augment_spec(anchors)
-	negatives = augment_spec(negatives)
-	
-	return anchors, negatives
-
-
+	samples = get_samples(path)
+	samples = augment_spec(samples)
+	return samples
+  
 def get_samples(path):
 	samples=[]
 	files = getall(path)
@@ -48,15 +55,11 @@ def augment_spec(samples):
 
 	return signals
 
-def getall(anchorsdir):
-  anchorfns = []
-  for path in os.listdir(anchorsdir):
-    full_path = os.path.join(anchorsdir, path)
-    ext = os.path.splitext(full_path)[1]
-    if ext != ".png" and os.path.isfile(full_path):
-      anchorfns.append(full_path)
-  return anchorfns
-
+def split(samples_same_category, num_test):
+  test = samples_same_category[:num_test]
+  train = samples_same_category[num_test:]
+  return train, test
+  
 def prnt(str):
   print("\n".join(str))
 
@@ -112,7 +115,25 @@ def create_anchors_ds_pairs(anchors1, anchors2):
   labels = labels[p]
 
   return X, labels
+
   
+def create_anchors_ds_pairs(samplesbycategory):
+  #for i in range(samplesbycategory.shape[0]):
+  #when anchors only on left val[:,0] is bad val[:,1]] is excelent
+  l = len(anchors1)
+  lh = math.floor(l/2)
+
+  l2 = len(anchors2)
+  lh2 = math.floor(l2/2)
+  
+  negatives = list(itertools.product(anchors1[:lh], anchors2)) + list(itertools.product(anchors2, anchors1[lh:])) + list(itertools.product(anchors1[:lh], anchors3)) + list(itertools.product(anchors3, anchors1[lh:])) + list(itertools.product(anchors2[:lh2], anchors3)) + list(itertools.product(anchors3, anchors2[lh2:]))
+              
+  
+  anchors = list(itertools.combinations(anchors1,2)) + list(itertools.combinations(anchors2,2)) + list(itertools.combinations(anchors3,2))
+
+  X = anchors + negatives
+  labels = np.ones(len(anchors), dtype=int).tolist() + np.zeros((len(negatives),), dtype=int).tolist()
+
 def create_anchors_ds_pairs(anchors1, anchors2, anchors3):
   #when anchors only on left val[:,0] is bad val[:,1]] is excelent
   l = len(anchors1)

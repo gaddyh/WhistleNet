@@ -4,7 +4,8 @@ from keras.losses import BinaryCrossentropy
 from keras.metrics import AUC, BinaryAccuracy
 import keras.backend as K
 from keras.utils.vis_utils import plot_model
-
+from tensorflow import keras
+import os
 import tensorflow as tf
 from tensorflow.keras import regularizers
 
@@ -30,7 +31,7 @@ def create_siamese_model() :
     layer4 = MaxPooling2D((2, 2), padding='same')(layer3)
     Dropout(0.8)
     layer5 = Flatten()(layer4)
-    embeddings = Dense(16, activation=None)(layer5)
+    embeddings = Dense(3, activation=None)(layer5)
     #embeddings = Dense(3, activation=tf.keras.activations.exponential, kernel_regularizer=regularizers.l2(0.1))(layer5)
 
     norm_embeddings = tf.nn.l2_normalize(embeddings, axis=-1)
