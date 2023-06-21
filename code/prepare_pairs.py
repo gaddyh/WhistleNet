@@ -21,7 +21,7 @@ def getall(media_dir):
   samplesbycategory = []
   i=0
   for path in os.listdir(media_dir):
-    samples_dir = os.path.join(anchorsdir, path)
+    samples_dir = os.path.join(media_dir, path)
     samplesbycategory[i] = get_set(samples_dir)
     i=i+1
   return samplesbycategory
@@ -34,9 +34,10 @@ def get_set(path):
   
 def get_samples(path):
 	samples=[]
-	files = getall(path)
-	for file in files:
-	  samples=samples+load_max_samples(file)
+	for file in os.listdir(path):
+	    #print(file)
+	    fp = os.path.join(path, file)
+        samples=samples+load_max_samples(fp)
 	return samples
 
 def augment_spec(samples):
@@ -62,7 +63,6 @@ def split(samples_same_category, num_test):
   
 def prnt(str):
   print("\n".join(str))
-
   
 def create_ds_pairs(anchors1, negatives1):
   #when anchors only on left val[:,0] is bad val[:,1]] is excelent
@@ -116,7 +116,7 @@ def create_anchors_ds_pairs(anchors1, anchors2):
 
   return X, labels
 
- def create_anchors_list_pairs(anchors1, anchors2, anchors3):
+def create_anchors_list_pairs(anchors1, anchors2, anchors3):
   #when anchors only on left val[:,0] is bad val[:,1]] is excelent
   l = len(anchors1)
   lh = math.floor(l/2)
