@@ -42,7 +42,7 @@ def create_siamese_model() :
     print(siamese_model.summary())
 
     # Compile model    
-    siamese_model.compile(optimizer='adam', loss= 'mse', metrics=['accuracy', tf.keras.metrics.AUC(from_logits=True)])
+    siamese_model.compile(optimizer='adam', loss= tf.keras.losses.BinaryCrossentropy(from_logits=True), metrics=['accuracy', tf.keras.metrics.AUC(from_logits=True)])
  
     # Plot flowchart fo model
     plot_model(siamese_model, to_file=os.getcwd()+'/siamese_model_mnist.png', show_shapes=1, show_layer_names=1)
