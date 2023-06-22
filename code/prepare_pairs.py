@@ -48,8 +48,8 @@ def augment_spec(samples):
 		#print(signal.shape,4)
 		signals.append(signal)
 		signals.append(noise(signal, noise_factor = 0.005 ))
-		signals.append(stretch(signal, 1.2))
-		signals.append(stretch(np.array(signal), 0.78))
+		#signals.append(stretch(signal, 1.2))
+		#signals.append(stretch(np.array(signal), 0.78))
 		signals.append(np.roll(signal, 300))
 
 	signals = list(map(get_spectrogram, signals))
