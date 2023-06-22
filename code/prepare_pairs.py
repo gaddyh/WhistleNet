@@ -22,7 +22,7 @@ def getall(media_dir):
 	i=0
 	for path in os.listdir(media_dir):
 		samples_dir = os.path.join(media_dir, path)
-		samplesbycategory[i] = get_set(samples_dir)
+		samplesbycategory.append(get_set(samples_dir))
 		i=i+1
 	return samplesbycategory
 
