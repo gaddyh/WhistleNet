@@ -192,7 +192,7 @@ def create_anchors_ds_pairs(trainsbycategory):
 
   return X, labels
   
-def create_hard_pairs(samplesbycategory):
+def create_hard_pairs(samplesbycategory, model):
   hard_negative_pairs = []
   hard_positive_pairs = []
   for i in range(len(samplesbycategory)):
