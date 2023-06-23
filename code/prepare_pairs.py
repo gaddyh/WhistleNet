@@ -163,3 +163,68 @@ def create_anchors_ds_pairs(anchors1, anchors2, anchors3):
 	labels = labels[p]
 
 	return X, labels
+
+
+def create_anchors_ds_pairs(trainsbycategory):
+  mids = []
+  negatives = []
+  for i in len(trainsbycategory):
+    mids[i] = math.floor(len(trainsbycategory[i])/2)
+	
+	
+    negatives = list(itertools.product(anchors1[:lh], anchors2)) + list(itertools.product(anchors2, anchors1[lh:])) + list(itertools.product(anchors1[:lh], anchors3)) + list(itertools.product(anchors3, anchors1[lh:])) + list(itertools.product(anchors2[:lh2], anchors3)) + list(itertools.product(anchors3, anchors2[lh2:]))
+							
+	
+	anchors = list(itertools.combinations(anchors1,2)) + list(itertools.combinations(anchors2,2)) + list(itertools.combinations(anchors3,2))
+
+	X = anchors + negatives
+	labels = np.ones(len(anchors), dtype=int).tolist() + np.zeros((len(negatives),), dtype=int).tolist()
+
+	print(len(labels))
+
+	X = np.array(X)
+	labels = np.array(labels)
+
+	p = [x for x in range(len(labels))]
+	random.shuffle(p)
+
+	X = X[p]
+	labels = labels[p]
+
+	return X, labels
+  
+  def create_hard_pairs(samplesbycategory):
+  hard_negative_pairs = []
+  hard_positive_pairs = []
+  for i in range(len(samplesbycategory)):
+    samples_np = np.array(samplesbycategory[i])
+    representations_i = model.predict(samples_np)
+    pairs = list(itertools.combinations(representations_i,2))
+    dots=[]
+    for pair in pairs:
+      a,b = pair
+      dot_product = a@b
+      if(dot_product < 0.5):
+        resulta = np.where((representations_i == a).all(axis=1))[0]
+        resultb = np.where((representations_i == b).all(axis=1))[0]
+        hard_pairs = (samples_np[resulta][0], samples_np[resultb][0])
+        hard_positive_pairs.append(hard_pairs)
+
+    for j in range(len(samplesbycategory)):
+      if i != j:
+        samples_np1 = np.array(samplesbycategory[j])
+        representations_j = model.predict(samples_np1)
+        pairs = list(itertools.product(representations_i, representations_j))
+        dots=[]
+        for pair in pairs:
+          a,b = pair
+          dot_product = a@b
+          if(dot_product > 0.5):
+            resulta = np.where((representations_i == a).all(axis=1))[0]
+            resultb = np.where((representations_j == b).all(axis=1))[0]
+            hard_pairs = (samples_np[resulta][0], samples_np1[resultb][0])
+            hard_negative_pairs.append(hard_pairs)
+
+  X = hard_positive_pairs + hard_negative_pairs
+  labels = np.ones(len(hard_positive_pairs), dtype=int).tolist() + np.zeros((len(hard_negative_pairs),), dtype=int).tolist()
+  return X, labels
