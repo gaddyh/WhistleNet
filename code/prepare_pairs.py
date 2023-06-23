@@ -171,27 +171,26 @@ def create_anchors_ds_pairs(trainsbycategory):
   for i in len(trainsbycategory):
     mids[i] = math.floor(len(trainsbycategory[i])/2)
 	
-	
     negatives = list(itertools.product(anchors1[:lh], anchors2)) + list(itertools.product(anchors2, anchors1[lh:])) + list(itertools.product(anchors1[:lh], anchors3)) + list(itertools.product(anchors3, anchors1[lh:])) + list(itertools.product(anchors2[:lh2], anchors3)) + list(itertools.product(anchors3, anchors2[lh2:]))
 							
 	
-	anchors = list(itertools.combinations(anchors1,2)) + list(itertools.combinations(anchors2,2)) + list(itertools.combinations(anchors3,2))
+  anchors = list(itertools.combinations(anchors1,2)) + list(itertools.combinations(anchors2,2)) + list(itertools.combinations(anchors3,2))
 
-	X = anchors + negatives
-	labels = np.ones(len(anchors), dtype=int).tolist() + np.zeros((len(negatives),), dtype=int).tolist()
+  X = anchors + negatives
+  labels = np.ones(len(anchors), dtype=int).tolist() + np.zeros((len(negatives),), dtype=int).tolist()
 
-	print(len(labels))
+  print(len(labels))
 
-	X = np.array(X)
-	labels = np.array(labels)
+  X = np.array(X)
+  labels = np.array(labels)
 
-	p = [x for x in range(len(labels))]
-	random.shuffle(p)
+  p = [x for x in range(len(labels))]
+  random.shuffle(p)
 
-	X = X[p]
-	labels = labels[p]
+  X = X[p]
+  labels = labels[p]
 
-	return X, labels
+  return X, labels
   
 def create_hard_pairs(samplesbycategory):
   hard_negative_pairs = []
