@@ -22,14 +22,14 @@ METRICS = [
 ]
 
 def create_siamese_model() :
-    input_layer = Input((374, 129, 1))
-    Dropout(0.4)
+    input_layer = Input((40, 114, 1))
+    Dropout(0.2)
     layer1 = Conv2D(16, (3, 3), activation='relu', padding='same')(input_layer)
     layer2 = MaxPooling2D((2, 2), padding='same')(layer1)
-    Dropout(0.8) 
+    Dropout(0.6) 
     layer3 = Conv2D(8, (3, 3), activation='relu', padding='same')(layer2)
     layer4 = MaxPooling2D((2, 2), padding='same')(layer3)
-    Dropout(0.8)
+    Dropout(0.6)
     layer5 = Flatten()(layer4)
     embeddings = Dense(3, activation=None)(layer5)
     #embeddings = Dense(3, activation=tf.keras.activations.exponential, kernel_regularizer=regularizers.l2(0.1))(layer5)
@@ -39,8 +39,8 @@ def create_siamese_model() :
     model = Model(inputs=input_layer, outputs=norm_embeddings)
 
     # Create siamese model
-    input1 = Input((374, 129, 1))
-    input2 = Input((374, 129, 1))
+    input1 = Input((40, 114, 1))
+    input2 = Input((40, 114, 1))
 
     # Create left and right twin models
     left_model = model(input1)
