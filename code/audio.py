@@ -33,7 +33,7 @@ import math
 def load_max_samples(path):
     samples = []
     
-    (signal, sampling_rate) = librosa.load(path)    
+    (signal, sampling_rate) = librosa.load(path, sr=sample_rate)    
     if sampling_rate == sample_rate:
         if len(signal) < sample_rate:
             signal = np.pad(signal, (0, max(0, sample_rate - len(signal))), "constant")
