@@ -193,16 +193,16 @@ def create_anchors_ds_pairs(trainsbycategory):
 
 	return X, labels
 	
-def create_hard_pairs(samplesbycategory, model, semi = true):
+def create_hard_pairs(samplesbycategory, model, semi = True):
 	hard_negative_pairs = []
 	hard_positive_pairs = []
 	for i in range(len(samplesbycategory)):
 		samples_np = np.array(samplesbycategory[i])
+		representations_i = model.predict(samples_np)
 		if (semi):
 			pairs = list(itertools.combinations(samples_np,2))
 			hard_positive_pairs = hard_positive_pairs + pairs
 		else:
-			representations_i = model.predict(samples_np)
 			pairs = list(itertools.combinations(representations_i,2))
 			dots=[]
 			for pair in pairs:
