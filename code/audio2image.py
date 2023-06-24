@@ -8,9 +8,7 @@ from scipy.signal import get_window
 import IPython.display as ipd
 import matplotlib.pyplot as plt
 
-%matplotlib inline
-
-def get_mfcc(waveform, sample_rate):
+def get_mfcc(waveform, sample_rate=48000):
   audio = normalize_audio(waveform)
   hop_size = 15 #ms
   FFT_size = 2048
@@ -27,6 +25,8 @@ def get_mfcc(waveform, sample_rate):
     audio_fft[:, n] = fft.fft(audio_winT[:, n], axis=0)[:audio_fft.shape[0]]
 
   audio_fft = np.transpose(audio_fft)
+  
+  audio_power = np.square(np.abs(audio_fft))
   
   freq_min = 0
   freq_high = sample_rate / 2
@@ -48,6 +48,7 @@ def get_mfcc(waveform, sample_rate):
 
   cepstral_coefficents = np.dot(dct_filters, audio_log)
   
+  return cepstral_coefficents
   
 def dct(dct_filter_num, filter_len):
     basis = np.empty((dct_filter_num,filter_len))
