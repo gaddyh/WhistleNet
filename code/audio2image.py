@@ -8,13 +8,14 @@ from scipy.signal import get_window
 import IPython.display as ipd
 import matplotlib.pyplot as plt
 import librosa
+sample_rate = 48000
 
 def get_mfcc2(signal, sr=48000):
   mfccs = librosa.feature.mfcc(y=signal, sr=sr, n_mfcc=4)
   return mfccs
 
 
-def get_mfcc2(signal):
+def get_mfcc22323(signal):
 # A 1024-point STFT with frames of 64 ms and 75% overlap.
   stfts = tf.signal.stft(signal, frame_length=1024, frame_step=256,
                          fft_length=1024)
