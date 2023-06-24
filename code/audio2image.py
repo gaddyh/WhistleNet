@@ -11,7 +11,7 @@ import librosa
 sample_rate = 48000
 
 def get_mfcc2(signal, sr=48000):
-  mfccs = librosa.feature.mfcc(y=signal, sr=sr, n_mfcc=4)
+  mfccs = librosa.feature.mfcc(y=signal, sr=sr, n_mfcc=13)
   return mfccs
 
 

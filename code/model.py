@@ -9,6 +9,8 @@ import os
 import tensorflow as tf
 from tensorflow.keras import regularizers
 
+m = 13
+
 METRICS = [
       keras.metrics.TruePositives(name='tp'),
       keras.metrics.FalsePositives(name='fp'),
@@ -22,7 +24,7 @@ METRICS = [
 ]
 
 def create_siamese_model() :
-    input_layer = Input((4, 94, 1))
+    input_layer = Input((m, 94, 1))
     layer1 = Conv2D(16, (3, 3), activation='relu', padding='same')(input_layer)
     layer2 = MaxPooling2D((2, 2), padding='same')(layer1)
     layer3 = Conv2D(8, (3, 3), activation='relu', padding='same')(layer2)
@@ -36,8 +38,8 @@ def create_siamese_model() :
     model = Model(inputs=input_layer, outputs=norm_embeddings)
 
     # Create siamese model
-    input1 = Input((4, 94, 1))
-    input2 = Input((4, 94, 1))
+    input1 = Input((m, 94, 1))
+    input2 = Input((m, 94, 1))
 
     # Create left and right twin models
     left_model = model(input1)
