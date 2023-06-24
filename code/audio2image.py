@@ -7,7 +7,43 @@ import scipy.fftpack as fft
 from scipy.signal import get_window
 import IPython.display as ipd
 import matplotlib.pyplot as plt
+import librosa
 
+def get_mfcc2(signal, sr=48000):
+  mfccs = librosa.feature.mfcc(y=signal, sr=sr, n_mfcc=4)
+  return mfccs
+
+
+def get_mfcc2(signal):
+# A 1024-point STFT with frames of 64 ms and 75% overlap.
+  stfts = tf.signal.stft(signal, frame_length=1024, frame_step=256,
+                         fft_length=1024)
+  spectrograms = tf.abs(stfts)
+
+  # Warp the linear scale spectrograms into the mel-scale.
+  num_spectrogram_bins = 513
+  lower_edge_hertz, upper_edge_hertz, num_mel_bins = 80.0, 7600.0, 80
+  linear_to_mel_weight_matrix = tf.signal.linear_to_mel_weight_matrix(
+    num_mel_bins, num_spectrogram_bins, sample_rate, lower_edge_hertz,
+    upper_edge_hertz)
+  mel_spectrograms = tf.tensordot(
+    spectrograms, linear_to_mel_weight_matrix, 1)
+  mel_spectrograms.set_shape(spectrograms.shape[:-1].concatenate(
+    linear_to_mel_weight_matrix.shape[-1:]))
+
+  # Compute a stabilized log to get log-magnitude mel-scale spectrograms.
+  log_mel_spectrograms = tf.math.log(mel_spectrograms + 1e-6)
+
+  # Compute MFCCs from log_mel_spectrograms and take the first 13.
+  mfccs = tf.signal.mfccs_from_log_mel_spectrograms(
+    log_mel_spectrograms)[..., :50]
+  
+  return mfccs
+
+ 
+ # look at more than one mfcc !! do they have equal shapes/sizes? fix size. find min and max sizes for all dataset
+ #understand this:
+ #https://www.kaggle.com/code/ilyamich/mfcc-implementation-and-tutorial
 def get_mfcc(waveform, sample_rate=48000):
   audio = normalize_audio(waveform)
   hop_size = 15 #ms
