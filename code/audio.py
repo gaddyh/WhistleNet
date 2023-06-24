@@ -8,27 +8,7 @@ import librosa
 # must be in main/colab
 #!pip install audio2numpy
 
-from audio2numpy import open_audio
-
-
-def load(path):
-    signal, sampling_rate = open_audio(path)
-    signal = np.pad(signal, (0, max(0, sample_rate - len(signal))), "constant")
-    return signal
-
-
-def load_tensor(path, sample_rate):
-    x = tf.io.read_file(str(path))
-    waveform, _ = tf.audio.decode_wav(
-        x,
-        desired_channels=1,
-        desired_samples=sample_rate,
-    )
-    return waveform
-
-
-import math
-
+#from audio2numpy import open_audio
 
 def load_max_samples(path):
     samples = []
