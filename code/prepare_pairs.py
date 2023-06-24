@@ -167,7 +167,7 @@ def create_anchors_ds_pairs(anchors1, anchors2, anchors3):
 
 
 def create_anchors_ds_pairs(trainsbycategory):
-	mids = range(len(trainsbycategory))
+	mids = list(range(len(trainsbycategory)))
 	negatives = []
 	anchors = []
 	count = len(trainsbycategory) - 1
