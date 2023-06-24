@@ -173,7 +173,7 @@ def create_anchors_ds_pairs(trainsbycategory):
 	count = len(trainsbycategory) - 1
 	for i in count:
 		mids[i] = math.floor(len(trainsbycategory[i])/2)
-		negative = negative + list(itertools.product(trainsbycategory[i][:mids[i]], trainsbycategory[i+1])) + list(itertools.product(trainsbycategory[i+1], trainsbycategory[i][mids[i]:))
+		negative = negative + list(itertools.product(trainsbycategory[i][:mids[i]], trainsbycategory[i+1])) + list(itertools.product(trainsbycategory[i+1], trainsbycategory[i][mids[i]:]))
 		anchors = anchors + list(itertools.combinations(trainsbycategory[i],2))
 
 	X = anchors + negatives
