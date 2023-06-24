@@ -22,12 +22,13 @@ def getall(media_dir):
     samplesbycategory = []
     i = 0
     for path in os.listdir(media_dir):
-        print(media_dir)
         samples_dir = os.path.join(media_dir, path)
+        print(samples_dir)
         if not os.path.isfile(samples_dir):
             samplesbycategory.append(get_set(samples_dir))
             i = i + 1
     return samplesbycategory
+
 
 
 def get_set(path):
