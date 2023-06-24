@@ -49,8 +49,8 @@ def augment_spec(samples):
 		#print(signal.shape,4)
 		signals.append(signal)
 		signals.append(noise(signal, noise_factor = 0.005 ))
-		#signals.append(stretch(signal, 1.2))
-		#signals.append(stretch(np.array(signal), 0.78))
+		signals.append(stretch(signal, 1.2))
+		signals.append(stretch(np.array(signal), 0.78))
 		signals.append(np.roll(signal, 300))
 
 	signals = list(map(get_mfcc2, signals))
@@ -193,22 +193,26 @@ def create_anchors_ds_pairs(trainsbycategory):
 
 	return X, labels
 	
-def create_hard_pairs(samplesbycategory, model):
+def create_hard_pairs(samplesbycategory, model, semi = true):
 	hard_negative_pairs = []
 	hard_positive_pairs = []
 	for i in range(len(samplesbycategory)):
 		samples_np = np.array(samplesbycategory[i])
-		representations_i = model.predict(samples_np)
-		pairs = list(itertools.combinations(representations_i,2))
-		dots=[]
-		for pair in pairs:
-			a,b = pair
-			dot_product = a@b
-			if(dot_product < 0.5):
-				resulta = np.where((representations_i == a).all(axis=1))[0]
-				resultb = np.where((representations_i == b).all(axis=1))[0]
-				hard_pairs = (samples_np[resulta][0], samples_np[resultb][0])
-				hard_positive_pairs.append(hard_pairs)
+		if (semi):
+			pairs = list(itertools.combinations(samples_np,2))
+			hard_positive_pairs = hard_positive_pairs + pairs
+		else:
+			representations_i = model.predict(samples_np)
+			pairs = list(itertools.combinations(representations_i,2))
+			dots=[]
+			for pair in pairs:
+				a,b = pair
+				dot_product = a@b
+				if(dot_product < 0.5):
+					resulta = np.where((representations_i == a).all(axis=1))[0]
+					resultb = np.where((representations_i == b).all(axis=1))[0]
+					hard_pairs = (samples_np[resulta][0], samples_np[resultb][0])
+					hard_positive_pairs.append(hard_pairs)
 
 		for j in range(len(samplesbycategory)):
 			if i != j:
@@ -225,6 +229,7 @@ def create_hard_pairs(samplesbycategory, model):
 						hard_pairs = (samples_np[resulta][0], samples_np1[resultb][0])
 						hard_negative_pairs.append(hard_pairs)
 
-	X = hard_positive_pairs + hard_negative_pairs
-	labels = np.ones(len(hard_positive_pairs), dtype=int).tolist() + np.zeros((len(hard_negative_pairs),), dtype=int).tolist()
+		X = hard_positive_pairs + hard_negative_pairs
+		labels = np.ones(len(hard_positive_pairs), dtype=int).tolist() + np.zeros((len(hard_negative_pairs),), dtype=int).tolist()
+		
 	return X, labels
