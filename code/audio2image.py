@@ -11,7 +11,7 @@ import librosa
 sample_rate = 48000
 
 def get_mfcc2(signal, sr=48000):
-  mfccs = librosa.feature.mfcc(y=signal, sr=sr, n_mfcc=13)
+  mfccs = librosa.feature.mfcc(y=signal, sr=sr, n_mfcc=20,lifter=100)
   return mfccs
 
 
@@ -67,7 +67,7 @@ def get_mfcc(waveform, sample_rate=48000):
   
   freq_min = 0
   freq_high = sample_rate / 2
-  mel_filter_num = 10
+  mel_filter_num = 20
   
   filter_points, mel_freqs = get_filter_points(freq_min, freq_high, mel_filter_num, FFT_size, sample_rate=48000)
 
