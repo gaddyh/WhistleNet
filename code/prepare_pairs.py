@@ -59,7 +59,7 @@ def augment_spec(samples):
         signals.append(np.roll(signal, 300))
 
     #signals = list(map(get_mfcc2, signals))
-    signals = list(map(get_spectrogram, signals))
+    signals = list(map(get_mfcc2, signals))
 
     return signals
 
