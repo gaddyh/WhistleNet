@@ -47,7 +47,7 @@ def create_siamese_model() :
     right_model = model(input2)
 
     # Dot product layer
-    dot_product = dot([left_model, right_model], axes=1, normalize=False)
+    dot_product = dot([left_model, right_model], axes=1, normalize=True)
 
     siamese_model = Model(inputs=[input1, input2], outputs=dot_product)
 

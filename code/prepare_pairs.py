@@ -5,7 +5,7 @@ import tensorflow as tf
 import numpy as np
 import itertools
 import random
-
+from keras.layers import dot
 import matplotlib.pyplot as plt
 from WhistleNet.code.augmentation import *
 from WhistleNet.code.audio import *
@@ -265,7 +265,7 @@ def create_hard_pairs(samplesbycategory, model, semi=True):
             dots = []
             for pair in pairs:
                 a, b = pair
-                dot_product = a @ b
+                dot_product = dot([a, b], axes=1, normalize=True)
                 if dot_product < 0.5:
                     resulta = np.where((representations_i == a).all(axis=1))[0]
                     resultb = np.where((representations_i == b).all(axis=1))[0]
@@ -280,8 +280,8 @@ def create_hard_pairs(samplesbycategory, model, semi=True):
                 dots = []
                 for pair in pairs:
                     a, b = pair
-                    dot_product = a @ b
-                    if dot_product > 0.5:
+                    dot_product = dot([a, b], axes=1, normalize=True)
+                    if dot_product > 0.2:
                         resulta = np.where((representations_i == a).all(axis=1))[0]
                         resultb = np.where((representations_j == b).all(axis=1))[0]
                         hard_pairs = (samples_np[resulta][0], samples_np1[resultb][0])
