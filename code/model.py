@@ -1,4 +1,4 @@
-from keras.layers import Dropout, Input, Dense, InputLayer, Conv2D, MaxPooling2D, UpSampling2D, InputLayer, Concatenate, Flatten, Reshape, Lambda, Embedding, dot
+from keras.layers import Dropout, Input, Dense, InputLayer, Conv2D, MaxPooling2D, UpSampling2D, InputLayer, Concatenate, Flatten, Reshape, Lambda, Embedding, dot, BatchNormalization
 from keras.models import Model, load_model, Sequential
 from keras.losses import BinaryCrossentropy
 from keras.metrics import AUC, BinaryAccuracy
@@ -25,9 +25,10 @@ METRICS = [
 
 def create_siamese_model() :
     input_layer = Input((m, 94, 1))
-    layer1 = Conv2D(16, (3, 3), activation='relu', padding='same')(input_layer)
+    layer1 = Conv2D(32, (3, 3), activation='relu', padding='same')(input_layer)
     layer2 = MaxPooling2D((2, 2), padding='same')(layer1)
-    layer3 = Conv2D(8, (3, 3), activation='relu', padding='same')(layer2)
+		layer25 = BatchNormalization()(layer2)
+		layer3 = Conv2D(8, (3, 3), activation='relu', padding='same')(layer25)
     layer4 = MaxPooling2D((2, 2), padding='same')(layer3)
     layer5 = Flatten()(layer4)
     embeddings = Dense(3, activation=None)(layer5)
