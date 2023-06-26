@@ -250,6 +250,26 @@ def create_anchors_ds_pairs(trainsbycategory):
 
     return X, labels
 
+		
+		
+		# TODO
+		# same samples per person. me has much more than others
+		# each batch same positives and negatives
+		
+		
+		
+def create_all_train_pairs(samplesbycategory):
+    negative_pairs = []
+    positive_pairs = []
+    for i,sc in enumerate(samplesbycategory):
+        positive_pairs = positive_pairs + list(itertools.combinations(sc, 2))
+    
+    negatives = list(itertools.product(samplesbycategory[0], samplesbycategory[1])) + list(itertools.product(samplesbycategory[2], samplesbycategory[0])) + list(itertools.product(samplesbycategory[0], samplesbycategory[3])) + list(itertools.product(samplesbycategory[4], samplesbycategory[0], )) + list(itertools.product(samplesbycategory[0], samplesbycategory[5])) + list(itertools.product(samplesbycategory[1], samplesbycategory[2])) + list(itertools.product(samplesbycategory[3], samplesbycategory[1])) + list(itertools.product(samplesbycategory[1], samplesbycategory[4])) + list(itertools.product(samplesbycategory[5], samplesbycategory[1])) + list(itertools.product(samplesbycategory[2], samplesbycategory[3])) + list(itertools.product(samplesbycategory[4], samplesbycategory[2])) + list(itertools.product(samplesbycategory[2], samplesbycategory[5])) + list(itertools.product(samplesbycategory[3], samplesbycategory[4])) + list(itertools.product(samplesbycategory[4], samplesbycategory[3]))  + list(itertools.product(samplesbycategory[5], samplesbycategory[4]))
+
+    X = positive_pairs + negatives
+    labels = np.ones(len(positive_pairs), dtype=int).tolist() + np.zeros((len(negatives),), dtype=int).tolist()
+
+    return X, labels
 
 def create_hard_pairs(samplesbycategory, model, semi=True):
     hard_negative_pairs = []
@@ -265,7 +285,7 @@ def create_hard_pairs(samplesbycategory, model, semi=True):
             dots = []
             for pair in pairs:
                 a, b = pair
-                dot_product = dot([a, b], axes=1, normalize=True)
+                dot_product = dot([[a], [b]], axes=1, normalize=True)
                 if dot_product < 0.5:
                     resulta = np.where((representations_i == a).all(axis=1))[0]
                     resultb = np.where((representations_i == b).all(axis=1))[0]
@@ -280,12 +300,10 @@ def create_hard_pairs(samplesbycategory, model, semi=True):
                 dots = []
                 for pair in pairs:
                     a, b = pair
-                    dot_product = dot([a, b], axes=1, normalize=True)
-                    if dot_product > 0.2:
-                        resulta = np.where((representations_i == a).all(axis=1))[0]
-                        resultb = np.where((representations_j == b).all(axis=1))[0]
-                        hard_pairs = (samples_np[resulta][0], samples_np1[resultb][0])
-                        hard_negative_pairs.append(hard_pairs)
+                    resulta = np.where((representations_i == a).all(axis=1))[0]
+                    resultb = np.where((representations_j == b).all(axis=1))[0]
+                    hard_pairs = (samples_np[resulta][0], samples_np1[resultb][0])
+                    hard_negative_pairs.append(hard_pairs)
 
         X = hard_positive_pairs + hard_negative_pairs
         labels = (

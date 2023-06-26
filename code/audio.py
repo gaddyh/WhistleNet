@@ -30,7 +30,7 @@ def load_max_samples(path):
     else:
         print("bad sample rate for ", path, "sample is: ", sampling_rate)
 
-    return samples
+    return samples[:5]
 
 
 def resample_example():
